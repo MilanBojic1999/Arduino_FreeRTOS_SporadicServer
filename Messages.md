@@ -15,7 +15,7 @@
 
 ## Arduino to JAVA
   
-  SYS - Sistems status
+  SYS - Systems status
   
   TMA - Tasks markers
   

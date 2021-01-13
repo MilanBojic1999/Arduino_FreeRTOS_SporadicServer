@@ -1,8 +1,5 @@
 # Arduino_FreeRTOS_SporadicServer
 
-# If-you-look-you-die
-Bunch of smaller project I needed to transfer to more computers:
-
 ## What hava I done so far:
 
 1. Promenio sam strukturu TCB_t da poseduje periodu( funkcionalno deadline za schedularae) i pri xTaskCreate ta perioda je na max, koristiće se druge funkcije za pravljenje korisničkih taskova

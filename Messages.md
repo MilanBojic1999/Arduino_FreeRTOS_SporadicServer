@@ -12,6 +12,8 @@
   ABT - Add Batch of tasks *( int num_periodic, int num_aperiodic )*
   
   MSC - Get Servers max capacity  *( void )*
+  
+  SSC - Start Scheduler *( void )*
 
 ## Arduino to JAVA
   

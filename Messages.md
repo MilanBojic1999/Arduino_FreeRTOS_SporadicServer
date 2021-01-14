@@ -19,5 +19,7 @@
   
   TMA - Tasks markers ->*(int task,int marker)*
   
+  MSC - Servers max capacity ->*(int max)*
+  
   MSG - Arduino String Message ->*( int msg_ind )*
   

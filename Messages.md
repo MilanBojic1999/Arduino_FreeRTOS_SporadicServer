@@ -15,9 +15,9 @@
 
 ## Arduino to JAVA
   
-  SYS - Systems status *(int runningTask,int serverCapacity,int currTick )*
+  SYS - Systems status ->*(int runningTask,int serverCapacity,int currTick )*
   
-  TMA - Tasks markers *(int task,int marker)*
+  TMA - Tasks markers ->*(int task,int marker)*
   
-  MSG - Arduino String Message *( int msg_ind )*
+  MSG - Arduino String Message ->*( int msg_ind )*
   

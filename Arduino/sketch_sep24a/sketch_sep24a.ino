@@ -164,3 +164,19 @@ static void MyTask3APer(void* pvParameters)
   }
   vTaskDelete(0);
 }
+
+void systemInfo(int runningTask,int serverCapacity,int currTick){
+  
+}
+
+
+void taskMarker(int task,int marker){
+
+  
+}
+
+
+void custMsg(int flag){
+
+  
+}

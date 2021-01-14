@@ -47,6 +47,8 @@ extern void custMsg(int flag);
 
 /*-----------------------------------------------------------*/
 
+char isStarted = 0;
+
 void initVariant(void) __attribute__ ((OS_main));
 void initVariant(void)
 {
@@ -58,13 +60,18 @@ void initVariant(void)
     USBDevice.attach();
 #endif
 
-    setup();                    // the normal Arduino setup() function is run here.
-    vTaskStartScheduler();      // initialise and run the freeRTOS scheduler. Execution should never return here.
+    setup();     	// the normal Arduino setup() function is run here.
+	while(isStarted == 0)
+	{
+		loop();
+	}
+    //vTaskStartScheduler();      // initialise and run the freeRTOS scheduler. Execution should never return here.
 }
 
 
-void startSchedluer()
-{
+void startSchedluer( void )
+{	
+	isStarted = 1;
 	vTaskStartScheduler();
 }
 

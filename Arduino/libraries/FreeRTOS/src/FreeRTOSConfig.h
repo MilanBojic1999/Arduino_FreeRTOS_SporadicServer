@@ -50,7 +50,7 @@
 #endif
 
 
-#define configTOTAL_HEAP_SIZE 1100
+#define configTOTAL_HEAP_SIZE 			1100
 
 
 #define configUSE_TICK_HOOK                 0

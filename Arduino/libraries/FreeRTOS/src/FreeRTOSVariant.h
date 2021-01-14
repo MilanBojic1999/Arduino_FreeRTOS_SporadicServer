@@ -63,6 +63,8 @@ void initVariant(void);
 
 void vApplicationIdleHook( void );
 
+void startSchedluer( void );
+
 void vApplicationMallocFailedHook( void );
 void vApplicationStackOverflowHook( TaskHandle_t xTask, char * pcTaskName );
 

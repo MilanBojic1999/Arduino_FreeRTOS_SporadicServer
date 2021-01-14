@@ -1286,7 +1286,7 @@ static void restartTaskStack(TCB_t* pxTCB)
 BaseType_t xSporadicServerInit(TickType_t uxPeriod,
 								TickType_t uxCapacity)
 {
-	if ( uxServerInstance.uxPeriod != 0 || uxPeriod<=uxCapacity) 
+	if ( uxPeriod<=uxCapacity ) 
 		return pdFALSE;
 		
 	uxServerInstance.uxPeriod = uxPeriod;
@@ -6306,3 +6306,5 @@ int iGetServerCapacity( void )
 {
 	return (int) uxServerInstance.uxCapacityLeft;
 }
+
+

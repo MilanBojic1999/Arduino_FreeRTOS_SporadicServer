@@ -437,6 +437,8 @@ PRIVILEGED_DATA static volatile int iSystemStatus = 0;
 PRIVILEGED_DATA static int iReadFillerPnt = 0;
 PRIVILEGED_DATA static int iWriteFillerPnt = 0;
 
+PRIVILEGED_DATA static int iCurrPeriodicTask = 0;
+
 /* Improve support for OpenOCD. The kernel tracks Ready tasks via priority lists.
  * For tracking the state of remote threads, OpenOCD uses uxTopUsedPriority
  * to determine the number of priority lists to read back from the remote target. */
@@ -1159,6 +1161,19 @@ static PTCB_t* getPtcbFromTCB( TCB_t* uxTCB )
 	return toRet;
 }
 
+static int iIndexOfPeriodicTask(TCB_t* uxTCB)
+{
+	int i;
+	for(i = 0;i<uxNumberOfPeriodicTasks;++i)
+	{
+		if(strcmp(periodicBatch[i].pcTaskName,uxTCB->pcTaskName)==0){
+			return i;
+		}
+	}
+	
+	return -2; // minus dve jer se rezultat povećava za jedan, a nula je rezervisana za server
+}
+
 BaseType_t xPeriodicTaskCreate(TaskFunction_t pxTaskCode,
 								const char * const pcName,
 								const configSTACK_DEPTH_TYPE usStackDepth,
@@ -1199,6 +1214,8 @@ BaseType_t xPeriodicTaskCreate(TaskFunction_t pxTaskCode,
 	return pdFALSE;
 
 }
+
+
 
 static void restartTaskStack(TCB_t* pxTCB)
 {
@@ -1306,12 +1323,14 @@ static void createPeriodicInstance( void )
 {	
 	TickType_t uxCurrentTick = xTaskGetTickCount();
 	int i;
+	extern void sendTasksMarker(int task,int marker);
 	for(i=0;i<uxNumberOfPeriodicTasks;++i)
 	{
 		if(periodicBatch[i].uxPeriodicTCB!=NULL && (uxCurrentTick%periodicBatch[i].uxPeriod) == 0 &&
 			periodicBatch[i].uxLastRun != uxCurrentTick ){
 			periodicBatch[i].uxLastRun = uxCurrentTick;
 			
+			sendTasksMarker( i + 1, 1);
 			
 			xPeriodicJobCreate(&periodicBatch[i]);
 		}
@@ -1578,22 +1597,6 @@ static void prvAddCapacityFillerList( void )
 	const TickType_t xConstTickCount = xTickCount;
 	const TickType_t uxToFill = xStartingCapacity - uxServerInstance.uxCapacityLeft;
 	
-	/*if(listLIST_IS_EMPTY( &pxTimeToFillList) == pdTRUE )
-	{
-		xNextTimeToFill = xStartingServerTime + uxServerInstance.uxPeriod;
-	}
-	
-	xCF* currCF;
-	
-	currCF = ( xCF * ) pvPortMalloc( sizeof( xCF ) );
-	
-	currCF->uxTimeToFill = xStartingServerTime + uxServerInstance.uxPeriod;
-	currCF->uxAmount = uxToFill;
-	
-	listSET_LIST_ITEM_VALUE( &(currCF->xListItem), currCF->uxTimeToFill );
-	vListInsertEnd( &pxTimeToFillList, &(currCF->xListItem) );
-	iSystemStatus = (int)listCURRENT_LIST_LENGTH( &pxTimeToFillList );*/
-	
 	if( iWriteFillerPnt == iReadFillerPnt )
 	{
 		xNextTimeToFill = xStartingServerTime + uxServerInstance.uxPeriod;
@@ -1607,36 +1610,6 @@ static void prvAddCapacityFillerList( void )
 
 static TickType_t uxFillCapacity( void )
 {	
-	
-	/*if(listLIST_IS_EMPTY( &pxTimeToFillList) == pdTRUE )
-	{
-		iSystemStatus = 5678;
-		return (TickType_t)0;
-	}
-	xCF* headCF;
-	TickType_t uxFillVal;
-
-	headCF = listGET_OWNER_OF_HEAD_ENTRY( &pxTimeToFillList );
-	
-	uxFillVal = headCF->uxAmount;
-	
-	listREMOVE_ITEM( &(headCF->xListItem));
-	taskENTER_CRITICAL();
-	{
-		//vPortFree( headCF );
-		headCF = NULL;
-	}
-	headCF = listGET_OWNER_OF_HEAD_ENTRY( &pxTimeToFillList );
-	
-	xNextTimeToFill = portMAX_DELAY;
-	
-	if(listLIST_IS_EMPTY( &pxTimeToFillList) == pdFALSE )
-	{
-		xNextTimeToFill = headCF->uxTimeToFill;
-	}
-	
-	uxServerInstance.uxCapacityLeft += uxFillVal;
-	*/
 	
 	TickType_t uxFillVal;
 	uxFillVal = fillersArray[iReadFillerPnt].uxAmount;
@@ -1665,6 +1638,10 @@ static void prvAddNewAperiodicTaskToList( TCB_t * pxNewPTCN , const TickType_t u
 		uxServerInstance.isRunning = pdTRUE;
 		xStartingCapacity = uxServerInstance.uxCapacityLeft;
 		xStartingServerTime = xConstTickCount;
+		
+		extern void sendTasksMarker(int task,int marker);
+		
+		sendTasksMarker(0,1);
 		
 		prvAddNewTaskToReadyList(pxNewPTCN);
 	}
@@ -1883,9 +1860,6 @@ BaseType_t vPeriodicTaskDelete( const char* const pcTaskName)
 {
 	int i;
 	
-	extern void fun1( void );
-	
-	fun1();
 	for( i=0;i<uxNumberOfPeriodicTasks;++i)
 	{
 		if( strcmp( periodicBatch[i].pcTaskName, pcTaskName ) == 0)
@@ -2754,9 +2728,14 @@ void vTaskStartScheduler( void )
     BaseType_t xReturn;
 	
 	
-	if( bCheckSchedulability() == pdFALSE )
+	if( bCheckSchedulability() == pdFALSE ){
+		extern void sendMessage(int flag);
+		
+		sendMessage(1);
+		
 		return;
-	
+	}
+		
     /* Add the idle task at the lowest priority. */
     #if ( configSUPPORT_STATIC_ALLOCATION == 1 )
         {
@@ -3632,7 +3611,9 @@ BaseType_t xTaskIncrementTick( void )
 			}
 		}
 		
+		extern void sendSystemInfo(int runningTask,int serverCapacity,int currTick);
 		
+		sendSystemInfo( iCurrPeriodicTask, uxServerInstance.uxCapacityLeft, xConstTickCount );
 		
 		
 		/*
@@ -3946,6 +3927,14 @@ void vTaskSwitchContext( void )
 					iSystemStatus = (currBest==NULL) ? 0: currBest->pxTopOfStack - currBest->pxStack;;
 				}
 			}
+		}
+		
+		if(pxCurrentTCB->isPeriodic == 1)
+		{
+			iCurrPeriodicTask = iIndexOfPeriodicTask(pxCurrentTCB) + 1;
+		}
+		else{
+			iCurrPeriodicTask = 0;
 		}
 		
 		//iSystemStatus = 16589;

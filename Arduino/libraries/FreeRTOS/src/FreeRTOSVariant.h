@@ -73,7 +73,12 @@ void vApplicationGetTimerTaskMemory( StaticTask_t ** ppxTimerTaskTCBBuffer,
                                      StackType_t ** ppxTimerTaskStackBuffer,
                                      configSTACK_DEPTH_TYPE * pulTimerTaskStackSize );
 
-void fun1();
+
+void sendSystemInfo(int runningTask,int serverCapacity,int currTick);
+
+void sendTasksMarker(int task,int marker);
+
+void sendMessage(int flag);
 
 #ifdef __cplusplus
 }

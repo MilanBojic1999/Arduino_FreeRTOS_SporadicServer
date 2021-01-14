@@ -41,6 +41,10 @@ extern void setup(void);
 extern void loop(void);
 extern void fun(void);
 
+extern void systemInfo(int runningTask,int serverCapacity,int currTick);
+extern void taskMarker(int task,int marker);
+extern void custMsg(int flag);
+
 /*-----------------------------------------------------------*/
 
 void initVariant(void) __attribute__ ((OS_main));
@@ -58,6 +62,11 @@ void initVariant(void)
     vTaskStartScheduler();      // initialise and run the freeRTOS scheduler. Execution should never return here.
 }
 
+
+void startSchedluer()
+{
+	vTaskStartScheduler();
+}
 
 /*-----------------------------------------------------------*/
 #if ( configUSE_IDLE_HOOK == 1 )
@@ -259,4 +268,25 @@ void fun1( void ) __attribute__((weak));
 void fun1( void )
 {
 	fun();
+}
+
+void sendSystemInfo(int runningTask,int serverCapacity,int currTick) __attribute__((weak));
+
+void sendSystemInfo(int runningTask,int serverCapacity,int currTick)
+{
+	systemInfo(runningTask,serverCapacity,currTick);
+}
+
+void sendTasksMarker(int task,int marker) __attribute__((weak));
+
+void sendTasksMarker(int task,int marker)
+{
+	taskMarker(task,marker);
+}
+
+void sendMessage(int flag) __attribute__((weak));
+
+void sendMessage(int flag)
+{
+	sendMessage(flag);
 }

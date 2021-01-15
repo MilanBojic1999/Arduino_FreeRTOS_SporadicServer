@@ -1856,18 +1856,10 @@ static void prvAddNewTaskToReadyList( TCB_t * pxNewTCB )
 /*-----------------------------------------------------------*/
 
 
-BaseType_t vPeriodicTaskDelete( const char* const pcTaskName)
-{
-	int i;
-	
-	for( i=0;i<uxNumberOfPeriodicTasks;++i)
-	{
-		if( strcmp( periodicBatch[i].pcTaskName, pcTaskName ) == 0)
-		{
-			TCB_t* pxTCB;
+static void deletePeriodicTCB(TCB_t* pxTCB){
 			taskENTER_CRITICAL();
 			{
-				pxTCB = periodicBatch[i].uxPeriodicTCB;
+				
 				uxTaskNumber++;
 
 				if( pxTCB == pxCurrentTCB)
@@ -1922,9 +1914,42 @@ BaseType_t vPeriodicTaskDelete( const char* const pcTaskName)
 					mtCOVERAGE_TEST_MARKER();
 				}
 			}
+}
+
+void vRestartAllPeriodicTasks()
+{
+	for(int i=0;i<uxNumberOfPeriodicTasks;++i)
+	{
+		if(periodicBatch[i].pxTaskCode != NULL)
+		{
+			TCB_t* pxTCB;
+			pxTCB = periodicBatch[i].uxPeriodicTCB;
+			
+			deletePeriodicTCB(pxTCB);
 			
 			periodicBatch[i].uxPeriodicTCB = NULL;
 			periodicBatch[i].pcTaskName[0] = 0x00;
+			periodicBatch[i].pxTaskCode = NULL;
+		}
+	}
+}
+
+BaseType_t vPeriodicTaskDelete( const char* const pcTaskName)
+{
+	int i;
+	
+	for( i=0;i<uxNumberOfPeriodicTasks;++i)
+	{
+		if( strcmp( periodicBatch[i].pcTaskName, pcTaskName ) == 0)
+		{
+			TCB_t* pxTCB;
+			pxTCB = periodicBatch[i].uxPeriodicTCB;
+			
+			deletePeriodicTCB(pxTCB);
+			
+			periodicBatch[i].uxPeriodicTCB = NULL;
+			periodicBatch[i].pcTaskName[0] = 0x00;
+			periodicBatch[i].pxTaskCode = NULL;
 			
 			return pdTRUE;
 		}
@@ -2673,7 +2698,7 @@ BaseType_t vPeriodicTaskDelete( const char* const pcTaskName)
 #endif /* ( ( INCLUDE_xTaskResumeFromISR == 1 ) && ( INCLUDE_vTaskSuspend == 1 ) ) */
 /*-----------------------------------------------------------*/
 
-BaseType_t bCheckSchedulability()
+char bCheckSchedulability()
 {
 	if ( uxServerInstance.uxPeriod == 0)
 	{	
@@ -2685,9 +2710,9 @@ BaseType_t bCheckSchedulability()
 			}
 		}
 		if(Up <= 2.0)
-			return pdTRUE;
+			return 1;
 		else
-			return pdFALSE;
+			return 0;
 	}else
 	{	
 		int i;
@@ -2699,12 +2724,12 @@ BaseType_t bCheckSchedulability()
 			}
 		}
 		if(Up <= (2.0/(Us+1)))
-			return pdTRUE;
+			return 1;
 		else
-			return pdFALSE;
+			return 0;
 		
 	}
-	return pdTRUE;
+	return 1;
 }
 
 int uxGetMaxServerCapacity( void )
@@ -2728,13 +2753,13 @@ void vTaskStartScheduler( void )
     BaseType_t xReturn;
 	
 	
-	if( bCheckSchedulability() == pdFALSE ){
+	/*if( bCheckSchedulability() == 0 ){
 		extern void sendMessage(int flag);
 		
 		sendMessage(1);
 		
 		return;
-	}
+	}*/
 		
     /* Add the idle task at the lowest priority. */
     #if ( configSUPPORT_STATIC_ALLOCATION == 1 )

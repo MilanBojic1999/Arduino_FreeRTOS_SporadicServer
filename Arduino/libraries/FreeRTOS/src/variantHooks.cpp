@@ -71,6 +71,12 @@ void initVariant(void)
 
 void startSchedluer( void )
 {	
+	if(bCheckSchedulability() == 0){
+		vRestartAllPeriodicTasks();
+		sendMessage(1);
+		return;
+	}
+
 	isStarted = 1;
 	vTaskStartScheduler();
 }

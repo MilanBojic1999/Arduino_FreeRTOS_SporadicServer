@@ -61,19 +61,25 @@ void loop() {
 }
 
 void systemInfo(int runningTask,int serverCapacity,int currTick){
+
+  Serial.write('S');
+  Serial.write('Y');
+  Serial.write('S');
+  
+  Serial.write(' ');
   
   Serial.write(highByte(runningTask));
-  Serial.write(highByte(runningTask));
+  Serial.write(lowByte(runningTask));
 
   Serial.write(' ');
   
   Serial.write(highByte(serverCapacity));
-  Serial.write(highByte(serverCapacity));
+  Serial.write(lowByte(serverCapacity));
 
   Serial.write(' ');
   
   Serial.write(highByte(currTick));
-  Serial.write(highByte(currTick));
+  Serial.write(lowByte(currTick));
 
   Serial.write('\n');
 }
@@ -81,13 +87,19 @@ void systemInfo(int runningTask,int serverCapacity,int currTick){
 
 void taskMarker(int task,int marker){
 
+  Serial.write('T');
+  Serial.write('M');
+  Serial.write('A');
+  
+  Serial.write(' ');
+  
   Serial.write(highByte(task));
-  Serial.write(highByte(task));
+  Serial.write(lowByte(task));
 
   Serial.write(' ');
   
   Serial.write(highByte(marker));
-  Serial.write(highByte(marker));
+  Serial.write(lowByte(marker));
 
   Serial.write('\n');
   
@@ -97,18 +109,30 @@ void taskMarker(int task,int marker){
 
 void custMsg(int flag){
 
+  Serial.write('M');
+  Serial.write('S');
+  Serial.write('C');
+  
+  Serial.write(' ');
+  
   Serial.write(highByte(flag));
-  Serial.write(highByte(flag));
+  Serial.write(lowByte(flag));
 
   Serial.write('\n');
 }
 
-void maxServerCap()
-{
+void maxServerCap(){
+
+  Serial.write('M');
+  Serial.write('S');
+  Serial.write('G');
+  
+  Serial.write(' ');
+  
   int val = uxGetMaxServerCapacity();
   
   Serial.write(highByte(val));
-  Serial.write(highByte(val));
+  Serial.write(lowByte(val));
 
   Serial.write('\n');
   
@@ -137,6 +161,8 @@ void createPeriodicTask(const char taskName[], int taskInd,const int period){
     case 4:
       xPeriodicTaskCreate(lightYellow,taskName,65,NULL,NULL,(TickType_t)period,(TickType_t)7);
       break;
+    default:
+      xPeriodicTaskCreate(lightRGB,taskName,65,NULL,NULL,(TickType_t)period,(TickType_t)15);
   }
 }
 
@@ -154,6 +180,8 @@ void createAperiodicTask(int taskInd,const int arrivel){
     case 4:
       xAperiodicTaskCreate(lightYellow,"AY",65,NULL,NULL,(TickType_t)arrivel);
       break;
+    default:
+      xAperiodicTaskCreate(lightRGB,taskName,65,NULL,NULL,(TickType_t)arrivel);
   }
 }
 
@@ -166,6 +194,8 @@ void lightRed(void* pvParameters){
   digitalWrite(BLUE_LED,LOW);
   digitalWrite(GREEN_LED,LOW);
   digitalWrite(YELL_LED,LOW);
+  
+  vTaskDelete(0);
 }
 
 void lightBlue(void* pvParameters){
@@ -173,6 +203,8 @@ void lightBlue(void* pvParameters){
   digitalWrite(BLUE_LED,HIGH);
   digitalWrite(GREEN_LED,LOW);
   digitalWrite(YELL_LED,LOW);
+  
+  vTaskDelete(0);
 }
 
 void lightGreen(void* pvParameters){
@@ -180,6 +212,8 @@ void lightGreen(void* pvParameters){
   digitalWrite(BLUE_LED,LOW);
   digitalWrite(GREEN_LED,HIGH);
   digitalWrite(YELL_LED,LOW);
+  
+  vTaskDelete(0);
 }
 
 void lightYellow(void* pvParameters){
@@ -187,6 +221,8 @@ void lightYellow(void* pvParameters){
   digitalWrite(BLUE_LED,LOW);
   digitalWrite(GREEN_LED,LOW);
   digitalWrite(YELL_LED,HIGH);
+  
+  vTaskDelete(0);
 }
 
 void lightRGB(void* pvParameters){
@@ -198,4 +234,6 @@ void lightRGB(void* pvParameters){
   vTaskDelay(1);
   digitalWrite(YELL_LED,HIGH);
   vTaskDelay(1);
+
+  vTaskDelete(0);
 }

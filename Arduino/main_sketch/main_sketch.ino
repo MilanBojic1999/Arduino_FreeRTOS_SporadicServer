@@ -1,9 +1,13 @@
 #include <Arduino_FreeRTOS.h>
 
-#define RED_LED 13
-#define BLUE_LED 12
-#define GREEN_LED 11
-#define YELL_LED 10
+
+#define YELL_LED 2
+#define GREEN_LED 3
+#define BLUE_LED 4
+#define RED_LED 5
+
+#define TEST1_LED 12
+#define TEST2_LED 10
 
 // funkcije veza izmađu arduina i FreeRTOS-a
 
@@ -15,6 +19,9 @@ void setup() {
   pinMode(BLUE_LED, OUTPUT);
   pinMode(GREEN_LED, OUTPUT);
   pinMode(YELL_LED, OUTPUT);
+
+  pinMode(TEST1_LED, OUTPUT);
+  pinMode(TEST2_LED, OUTPUT);
   
   while(!Serial)
   {
@@ -24,11 +31,15 @@ void setup() {
 
 String msg = "";
 
+char ss = 0;
+char runn = 0;
 void loop() {
   if(Serial.available() > 0)
   {
-    delay(3);
+    lightTest2();
+    delay(7);
     msg = Serial.readStringUntil(' ');
+    Serial.println(msg);
     if(msg.equals("ISS")){
       int period = Serial.readStringUntil(' ').toInt();
       int cap = Serial.readStringUntil('\n').toInt();
@@ -52,35 +63,49 @@ void loop() {
       String taskName = Serial.readStringUntil('\n');
       stopPeriodic(taskName.c_str());
     }else if(msg.equals("SSC")){
-      startSchedluer();
+      delay(10);
+      runn = 1;
+      vTaskStartScheduler();
+      //startSchedluer();
+    }else {
+      Serial.println();
+      Serial.println(msg);
+      Serial.flush();
+      delay(10);
     }
-      
+    
+  }else if(runn == 0){
+    lightTest1();
+    if(ss==0)
+      Serial.write(100);
+    ++ss;
+    delay(10);
   }
   msg = "";
 
 }
 
 void systemInfo(int runningTask,int serverCapacity,int currTick){
-
+  
   Serial.write('S');
   Serial.write('Y');
   Serial.write('S');
   
   Serial.write(' ');
   
-  Serial.write(highByte(runningTask));
-  Serial.write(lowByte(runningTask));
-
+  //Serial.write(highByte(runningTask));
+  //Serial.write(lowByte(runningTask));
+  Serial.print(runningTask);
   Serial.write(' ');
   
-  Serial.write(highByte(serverCapacity));
-  Serial.write(lowByte(serverCapacity));
-
+  //Serial.write(highByte(serverCapacity));
+  //Serial.write(lowByte(serverCapacity));
+  Serial.print(serverCapacity);
   Serial.write(' ');
   
-  Serial.write(highByte(currTick));
-  Serial.write(lowByte(currTick));
-
+  //Serial.write(highByte(currTick));
+  //Serial.write(lowByte(currTick));
+  Serial.print(currTick);
   Serial.write('\n');
 }
 
@@ -109,6 +134,8 @@ void taskMarker(int task,int marker){
 
 void custMsg(int flag){
 
+  Serial.println("Ov sdf");
+  
   Serial.write('M');
   Serial.write('S');
   Serial.write('C');
@@ -146,23 +173,23 @@ void initServer(int period, int capacity){
 
 void createPeriodicTask(const char taskName[], int taskInd,const int period){
 
-  vTaskStartScheduler();
+  //vTaskStartScheduler();
   
   switch(taskInd){
     case 1:
-      xPeriodicTaskCreate(lightRed,taskName,65,NULL,NULL,(TickType_t)period,(TickType_t)7);
+      xPeriodicTaskCreate(lightRed,taskName,65,NULL,NULL,(TickType_t)period,(TickType_t)15);
       break;
     case 2:
-      xPeriodicTaskCreate(lightBlue,taskName,65,NULL,NULL,(TickType_t)period,(TickType_t)7);
+      xPeriodicTaskCreate(lightBlue,taskName,65,NULL,NULL,(TickType_t)period,(TickType_t)15);
       break;
     case 3:
-      xPeriodicTaskCreate(lightGreen,taskName,65,NULL,NULL,(TickType_t)period,(TickType_t)7);
+      xPeriodicTaskCreate(lightGreen,taskName,65,NULL,NULL,(TickType_t)period,(TickType_t)15);
       break;
     case 4:
-      xPeriodicTaskCreate(lightYellow,taskName,65,NULL,NULL,(TickType_t)period,(TickType_t)7);
+      xPeriodicTaskCreate(lightYellow,taskName,65,NULL,NULL,(TickType_t)period,(TickType_t)15);
       break;
     default:
-      xPeriodicTaskCreate(lightRGB,taskName,65,NULL,NULL,(TickType_t)period,(TickType_t)15);
+      xPeriodicTaskCreate(lightRGB,taskName,65,NULL,NULL,(TickType_t)period,(TickType_t)17);
   }
 }
 
@@ -181,7 +208,7 @@ void createAperiodicTask(int taskInd,const int arrivel){
       xAperiodicTaskCreate(lightYellow,"AY",65,NULL,NULL,(TickType_t)arrivel);
       break;
     default:
-      xAperiodicTaskCreate(lightRGB,taskName,65,NULL,NULL,(TickType_t)arrivel);
+      xAperiodicTaskCreate(lightRGB,"ARGB",65,NULL,NULL,(TickType_t)arrivel);
   }
 }
 
@@ -194,7 +221,7 @@ void lightRed(void* pvParameters){
   digitalWrite(BLUE_LED,LOW);
   digitalWrite(GREEN_LED,LOW);
   digitalWrite(YELL_LED,LOW);
-  
+  //delay(4);
   vTaskDelete(0);
 }
 
@@ -203,7 +230,7 @@ void lightBlue(void* pvParameters){
   digitalWrite(BLUE_LED,HIGH);
   digitalWrite(GREEN_LED,LOW);
   digitalWrite(YELL_LED,LOW);
-  
+  //delay(4);
   vTaskDelete(0);
 }
 
@@ -212,7 +239,7 @@ void lightGreen(void* pvParameters){
   digitalWrite(BLUE_LED,LOW);
   digitalWrite(GREEN_LED,HIGH);
   digitalWrite(YELL_LED,LOW);
-  
+  //delay(4);
   vTaskDelete(0);
 }
 
@@ -221,7 +248,7 @@ void lightYellow(void* pvParameters){
   digitalWrite(BLUE_LED,LOW);
   digitalWrite(GREEN_LED,LOW);
   digitalWrite(YELL_LED,HIGH);
-  
+  //delay(4);
   vTaskDelete(0);
 }
 
@@ -236,4 +263,14 @@ void lightRGB(void* pvParameters){
   vTaskDelay(1);
 
   vTaskDelete(0);
+}
+
+void lightTest1(){
+  digitalWrite(TEST1_LED,HIGH);
+  digitalWrite(TEST2_LED,LOW);
+}
+
+void lightTest2(){
+  digitalWrite(TEST1_LED,LOW);
+  digitalWrite(TEST2_LED,HIGH);
 }

@@ -83,13 +83,13 @@ public class Test extends Application {
             return;
         }
 
-        Random r = new Random();
+        /*Random r = new Random();
 
         for(int i=0;i<20;i++){
             list.add(r.nextInt(4));
         }
 
-        controler.fillTaskCanves(list);
+        controler.fillTaskCanves(list);*/
 
         Scene scene = new Scene(root);
 
@@ -137,32 +137,38 @@ public class Test extends Application {
 
     public boolean sendSporadicServerInit(int period,int capacity) {
         String msg = "ISS "+period+" "+capacity+"\n";
+        System.out.println(msg);
         return sendMassageToArduino(msg);
     }
 
     public boolean sendAddAperiodicTask(int task_ind,int arrival){
         String msg = "APT "+task_ind+" "+arrival+"\n";
+        System.out.println(msg);
         return sendMassageToArduino(msg);
     }
 
     public boolean sendAddAperiodicTask(int task_ind){
         int arrival = currTick + 5;
         String msg = "APT "+task_ind+" "+arrival+"\n";
+        System.out.println(msg);
         return sendMassageToArduino(msg);
     }
 
     public boolean sendAddPeriodicTask(String taskName,int task_ind,int period){
         String msg = "PET "+taskName+" "+task_ind+" "+period+"\n";
+        System.out.println(msg);
         return sendMassageToArduino(msg);
     }
 
     public boolean sendStopPeriodicTask(String taskName){
-        String msg = "STP "+taskName+"\n";
+        String msg = "SPT "+taskName+"\n";
+        System.out.println(msg);
         return sendMassageToArduino(msg);
     }
 
     public boolean sendStartServer(){
         String msg = "SSC ";
+        System.out.println(msg);
         return sendMassageToArduino(msg);
     }
 

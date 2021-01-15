@@ -4,6 +4,7 @@ import app.Test;
 import com.fazecast.jSerialComm.SerialPort;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 public class ArduinoConnector implements Runnable{
 
@@ -17,13 +18,24 @@ public class ArduinoConnector implements Runnable{
         SerialPort sp = app.getSerialPort();
         byte[] bytes = new byte[100];
         int i=0;
+        int bll = sp.getInputStream().available();
+        System.out.println(bll);
+        if(bll==0)
+            return "";
         while(sp.getInputStream().available()>0) {
             int tmp = sp.getInputStream().read();
+            //System.out.println(tmp);
             if(tmp==10)
                 break;
-            bytes[i++] = (byte) tmp;
+            try {
+                bytes[i++] = (byte) tmp;
+            }catch (ArrayIndexOutOfBoundsException e){
+                System.out.println("Overflow: "+tmp);
+            }
         }
-
+        System.out.println("AA_:"+Arrays.toString(bytes));
+        if(i==0)
+            return "";
         return new String(bytes);
     }
 
@@ -31,6 +43,7 @@ public class ArduinoConnector implements Runnable{
     public void run() {
         while(true) {
             //app.newFill(0);
+            //System.out.println("NE message");
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {
@@ -44,8 +57,9 @@ public class ArduinoConnector implements Runnable{
                 //e.printStackTrace();
                 continue;
             }
-
-            System.out.println(msg);
+            if(msg.equals(""))
+                return;
+            System.out.println("This: "+msg);
 
             if(msg.startsWith("SYS")){
 

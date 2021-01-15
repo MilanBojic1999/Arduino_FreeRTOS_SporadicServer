@@ -17,7 +17,7 @@ void setup()
   
   xAperiodicTaskCreate(MyTask1APer, "Task3", 65, NULL, NULL,(TickType_t)0);
   xAperiodicTaskCreate(MyTask2APer, "Task4", 65, NULL, NULL,(TickType_t)21);
-  xAperiodicTaskCreate(MyTask3APer, "Task5", 65, NULL, NULL,(TickType_t)27);
+  //xAperiodicTaskCreate(MyTask3APer, "Task5", 65, NULL, NULL,(TickType_t)27);
   //xAperiodicTaskCreate(MyTask1APer, "Task31", 65, NULL, NULL,(TickType_t)200);
   /*xAperiodicTaskCreate(MyTask2APer, "Task41", 75, NULL, NULL,(TickType_t)22);
   xAperiodicTaskCreate(MyTask3APer, "Task51", 75, NULL, NULL,(TickType_t)0);
@@ -38,7 +38,7 @@ void setup()
 }
 
 unsigned int cnt = 0;
-
+char timer = 1;
 void loop()
 {
   //Serial.println(F("Task1A\t\t"));
@@ -51,6 +51,7 @@ void loop()
   Serial.print(xGetNextTimetoFill());
   Serial.println(F("   "));*/
   //cnt = (cnt+1);
+  
   if(cnt == 0 && xTaskGetTickCount() > 300)
   {
     vPeriodicTaskDelete("Per1");

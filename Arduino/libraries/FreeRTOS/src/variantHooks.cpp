@@ -68,15 +68,16 @@ void initVariant(void)
     //vTaskStartScheduler();      // initialise and run the freeRTOS scheduler. Execution should never return here.
 }
 
+void startSchedluer( void ) __attribute__((weak));
 
 void startSchedluer( void )
 {	
-	if(bCheckSchedulability() == 0){
+	/*if(bCheckSchedulability() == 0){
 		vRestartAllPeriodicTasks();
 		sendMessage(1);
 		return;
-	}
-
+	}*/
+	sendMessage(10);
 	isStarted = 1;
 	vTaskStartScheduler();
 }
@@ -278,28 +279,23 @@ void vApplicationAssertHook() {
 #endif
 void fun1( void ) __attribute__((weak));
 
-void fun1( void )
-{
-	fun();
-}
-
 void sendSystemInfo(int runningTask,int serverCapacity,int currTick) __attribute__((weak));
 
 void sendSystemInfo(int runningTask,int serverCapacity,int currTick)
 {
-	systemInfo(runningTask,serverCapacity,currTick);
+	//systemInfo(runningTask,serverCapacity,currTick);
 }
 
 void sendTasksMarker(int task,int marker) __attribute__((weak));
 
 void sendTasksMarker(int task,int marker)
 {
-	taskMarker(task,marker);
+	//taskMarker(task,marker);
 }
 
 void sendMessage(int flag) __attribute__((weak));
 
 void sendMessage(int flag)
 {
-	sendMessage(flag);
+	//sendMessage(flag);
 }

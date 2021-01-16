@@ -283,19 +283,19 @@ void sendSystemInfo(int runningTask,int serverCapacity,int currTick) __attribute
 
 void sendSystemInfo(int runningTask,int serverCapacity,int currTick)
 {
-	//systemInfo(runningTask,serverCapacity,currTick);
+	systemInfo(runningTask,serverCapacity,currTick);
 }
 
 void sendTasksMarker(int task,int marker) __attribute__((weak));
 
 void sendTasksMarker(int task,int marker)
 {
-	//taskMarker(task,marker);
+	taskMarker(task,marker);
 }
 
 void sendMessage(int flag) __attribute__((weak));
 
 void sendMessage(int flag)
 {
-	//sendMessage(flag);
+	sendMessage(flag);
 }

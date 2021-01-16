@@ -163,6 +163,7 @@ public class Test extends Application {
     public boolean sendStopPeriodicTask(String taskName){
         String msg = "SPT "+taskName+"\n";
         System.out.println(msg);
+
         return sendMassageToArduino(msg);
     }
 
@@ -175,6 +176,7 @@ public class Test extends Application {
     private boolean sendMassageToArduino(String msg){
         try {
             serialPort.getOutputStream().write(msg.getBytes());
+            serialPort.getOutputStream().flush();
         } catch (IOException e) {
             //e.printStackTrace();
             return false;

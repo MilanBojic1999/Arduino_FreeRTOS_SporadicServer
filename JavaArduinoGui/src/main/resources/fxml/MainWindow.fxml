@@ -17,6 +17,28 @@
          <children>
             <VBox alignment="CENTER" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="40.0">
                <children>
+                  <HBox alignment="CENTER" prefHeight="42.0" prefWidth="250.0" spacing="10.0">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="70.0">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Text>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Period" wrappingWidth="75.0">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Text>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Capacity" wrappingWidth="75.0">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Text>
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </HBox>
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                      <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Server">
@@ -26,6 +48,33 @@
                         </Text>
                         <TextField fx:id="serverTF1" />
                         <TextField fx:id="serverTF2" />
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="42.0" prefWidth="250.0" spacing="10.0">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="70.0">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Text>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="TskNam" textAlignment="CENTER" wrappingWidth="50.0">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Text>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="TaskInd" textAlignment="CENTER" wrappingWidth="60.0">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Text>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Period" wrappingWidth="60.0">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Text>
                      </children>
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -71,6 +120,28 @@
                         <TextField fx:id="periodic3TF1" />
                         <TextField fx:id="periodic3TF2" />
                         <TextField fx:id="periodic3TF3" />
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="42.0" prefWidth="250.0" spacing="10.0">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="70.0">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Text>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Task Ind" textAlignment="CENTER" wrappingWidth="75.0">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Text>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Arrival" textAlignment="CENTER" wrappingWidth="75.0">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Text>
                      </children>
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

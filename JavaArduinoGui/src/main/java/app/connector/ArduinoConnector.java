@@ -2,8 +2,12 @@ package app.connector;
 
 import app.Test;
 import com.fazecast.jSerialComm.SerialPort;
+import javafx.application.Platform;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 public class ArduinoConnector implements Runnable{
@@ -18,22 +22,25 @@ public class ArduinoConnector implements Runnable{
         SerialPort sp = app.getSerialPort();
         byte[] bytes = new byte[100];
         int i=0;
+        int tmp = 0;
         int bll = sp.getInputStream().available();
-        System.out.println(bll);
+        //System.out.println(bll);
         if(bll==0)
             return "";
-        while(sp.getInputStream().available()>0) {
-            int tmp = sp.getInputStream().read();
-            //System.out.println(tmp);
-            if(tmp==10)
-                break;
-            try {
-                bytes[i++] = (byte) tmp;
-            }catch (ArrayIndexOutOfBoundsException e){
-                System.out.println("Overflow: "+tmp);
+        while(tmp!=10) {
+            while (sp.getInputStream().available() > 0) {
+                tmp = sp.getInputStream().read();
+                //System.out.println(tmp);
+                if (tmp == 10)
+                    break;
+                try {
+                    bytes[i++] = (byte) tmp;
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    System.out.println("Overflow: " + tmp);
+                }
             }
         }
-        System.out.println("AA_:"+Arrays.toString(bytes));
+        //System.out.println("AA_:"+Arrays.toString(bytes));
         if(i==0)
             return "";
         return new String(bytes);
@@ -54,12 +61,12 @@ public class ArduinoConnector implements Runnable{
             try {
                 msg = reciveMessage();
             } catch (IOException e) {
-                //e.printStackTrace();
+                e.printStackTrace();
                 continue;
             }
             if(msg.equals(""))
-                return;
-            System.out.println("This: "+msg);
+                continue;
+            //System.out.println("This: "+msg);
 
             if(msg.startsWith("SYS")){
 
@@ -89,17 +96,25 @@ public class ArduinoConnector implements Runnable{
                 String[] arr = msg.split(" ");
                 int ind = getInteger(arr[1]);
                 if(ind == 1){
-                    app.getControler().openWarningWindow("This batch isn't schedulable");
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            app.getControler().openWarningWindow("This batch isn't schedulable");
+                        }
+                    });
+
                 }else{
                     System.err.println("IDK what this mead: "+ind);
                 }
 
             }else if(msg.startsWith("MSC")){
-
+                System.out.println(msg);
                 String[] arr = msg.split(" ");
                 int max = getInteger(arr[1]);
-
+                System.out.println("MSC: "+max);
                 app.getControler().setMaxCap(max);
+            }else{
+                System.err.println(msg);
             }
 
         }
@@ -108,6 +123,14 @@ public class ArduinoConnector implements Runnable{
     int getInteger(String str){
         byte[] arr = str.getBytes();
 
+        if(arr.length==1)
+            return (arr[0] & 0xff);
         return ((arr[0] & 0xff)) << 8 | (arr[1] & 0xff) ;
+    }
+
+    double getDouble(String str){
+        byte[] arr = str.getBytes();
+
+        return ByteBuffer.wrap(arr).getDouble();
     }
 }

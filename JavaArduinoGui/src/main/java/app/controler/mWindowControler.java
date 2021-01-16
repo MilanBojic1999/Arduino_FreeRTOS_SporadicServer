@@ -205,7 +205,7 @@ public class mWindowControler {
             int task = arrivalList.get(i)%10;
             int pixel = arrivalList.get(i)/10;
 
-            System.out.println("/-\\: "+task);
+            //System.out.println("/-\\: "+task);
             if(task==0){
                 gc0.fillRect((pixel+1)*20,10,10,10);
             }else if(task==1){
@@ -250,7 +250,7 @@ public class mWindowControler {
 
         for(int i=0;i<list.size();++i){
             int val = list.get(i);
-            System.out.println("->->: "+val);
+            //System.out.println("->->: "+val);
             if(val==0){
                 gc0.fillRect((i+1)*20,30,20,20);
             }else if(val==1){
@@ -272,7 +272,17 @@ public class mWindowControler {
     }
 
     public void setMaxCap(int val){
+        //System.out.println(val);
         maxCapT.setText(String.valueOf(val));
+    }
+
+    private static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        long factor = (long) Math.pow(10, places);
+        value = value * factor;
+        long tmp = Math.round(value);
+        return (double) tmp / factor;
     }
 
     public void openWarningWindow(String msg){

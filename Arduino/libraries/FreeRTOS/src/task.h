@@ -3034,9 +3034,9 @@ TaskHandle_t pvTaskIncrementMutexHeldCount( void ) PRIVILEGED_FUNCTION;
  */
 void vTaskInternalSetTimeOutState( TimeOut_t * const pxTimeOut ) PRIVILEGED_FUNCTION;
 
-void vRestartAllPeriodicTasks() PRIVILEGED_FUNCTION;
+void vRestartAllPeriodicTasks( void ) PRIVILEGED_FUNCTION;
 
-char bCheckSchedulability() PRIVILEGED_FUNCTION;
+char bCheckSchedulability( void ) PRIVILEGED_FUNCTION;
 
 int xGetSystemStatus( void ) PRIVILEGED_FUNCTION;
 

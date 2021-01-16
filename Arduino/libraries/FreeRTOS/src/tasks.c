@@ -2706,30 +2706,35 @@ char bCheckSchedulability()
 		double Up = 1.0;
 		for(i = 0;i<uxNumberOfPeriodicTasks;++i){
 			if(periodicBatch[i].uxPeriod != 0){
-				Up = Up * ((periodicBatch[i].uxExecution/periodicBatch[i].uxPeriod*1.0)+1);
+				Up = Up * ((periodicBatch[i].uxExecution/(periodicBatch[i].uxPeriod*1.0))+1.0);
 			}
 		}
+		//return (char)Up;
 		if(Up <= 2.0)
 			return 1;
 		else
 			return 0;
-	}else
+	}
+	else
 	{	
 		int i;
 		double Us = uxServerInstance.uxCapacity/(uxServerInstance.uxPeriod*1.0);
 		double Up = 1.0;
 		for(i = 0;i<uxNumberOfPeriodicTasks;++i){
 			if(periodicBatch[i].uxPeriod != 0){
-				Up = Up * ((periodicBatch[i].uxExecution/periodicBatch[i].uxPeriod*1.0)+1);
+				Up = Up * ((periodicBatch[i].uxExecution/(periodicBatch[i].uxPeriod*1.0))+1.0);
 			}
 		}
-		if(Up <= (2.0/(Us+1)))
+		
+		//return (char)Up;
+		
+		if(Up <= (2.0/(Us+1.0)))
 			return 1;
 		else
 			return 0;
 		
 	}
-	return 1;
+	return 0;
 }
 
 int uxGetMaxServerCapacity( void )
@@ -2738,11 +2743,11 @@ int uxGetMaxServerCapacity( void )
 	double Up = 1.0;
 	for(i = 0;i<uxNumberOfPeriodicTasks;++i){
 		if(periodicBatch[i].uxPeriod != 0){
-			Up = Up * ((periodicBatch[i].uxExecution/periodicBatch[i].uxPeriod*1.0)+1);
+			Up = Up * ((periodicBatch[i].uxExecution/(periodicBatch[i].uxPeriod*1.0))+1.0);
 		}
 	}
-	
-	double Uss = (2-Up)/Up;
+		
+	double Uss = (2.0-Up)/Up;
 	int uCap = (int) (Uss*uxServerInstance.uxPeriod);
 	
 	return uCap;

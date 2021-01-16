@@ -36,7 +36,7 @@ void loop() {
   if(Serial.available() > 0)
   {
     lightTest2();
-    delay(10);
+    delay(4);
     msg = Serial.readStringUntil(' ');
 
     if(msg.equals("ISS")){
@@ -75,7 +75,7 @@ void loop() {
         Serial.write(highByte(res));
         Serial.write(lowByte(res));
         Serial.write(10);
-        delay(5);
+        //delay(5);
         Serial.flush();
         
         vTaskStartScheduler();
@@ -90,7 +90,7 @@ void loop() {
       Serial.write("MIS ");
       Serial.println(msg);
       Serial.flush();
-      delay(10);
+      //delay(10);
     }
     
   }else{
@@ -120,7 +120,7 @@ void systemInfo(int runningTask,int serverCapacity,int currTick){
 
   Serial.write(10);
   Serial.flush();
-  delay(10);
+  //delay(10);
 }
 
 
@@ -138,7 +138,7 @@ void taskMarker(int task,int marker){
 
   Serial.write(10);
   Serial.flush();
-  delay(10);
+  //delay(10);
 }
 
 
@@ -152,7 +152,7 @@ void custMsg(int flag){
 
   Serial.write(10);
   Serial.flush();
-  delay(10);
+  //delay(10);
   
 }
 
@@ -167,7 +167,7 @@ void maxServerCap(){
 
   Serial.write(10);
   Serial.flush();
-  delay(10);
+  //delay(10);
 }
 
 // funkcije koje će opslužiti Java pozive
@@ -180,19 +180,19 @@ void createPeriodicTask(const char taskName[], int taskInd,const int period){
   
   switch(taskInd){
     case 1:
-      xPeriodicTaskCreate(lightRed,taskName,65,NULL,NULL,(TickType_t)period,(TickType_t)8);
+      xPeriodicTaskCreate(lightRed,taskName,65,NULL,NULL,(TickType_t)period,(TickType_t)4);
       break;
     case 2:
-      xPeriodicTaskCreate(lightBlue,taskName,65,NULL,NULL,(TickType_t)period,(TickType_t)8);
+      xPeriodicTaskCreate(lightBlue,taskName,65,NULL,NULL,(TickType_t)period,(TickType_t)4);
       break;
     case 3:
-      xPeriodicTaskCreate(lightGreen,taskName,65,NULL,NULL,(TickType_t)period,(TickType_t)8);
+      xPeriodicTaskCreate(lightGreen,taskName,65,NULL,NULL,(TickType_t)period,(TickType_t)4);
       break;
     case 4:
-      xPeriodicTaskCreate(lightYellow,taskName,65,NULL,NULL,(TickType_t)period,(TickType_t)8);
+      xPeriodicTaskCreate(lightYellow,taskName,65,NULL,NULL,(TickType_t)period,(TickType_t)4);
       break;
     default:
-      xPeriodicTaskCreate(lightRGB,taskName,65,NULL,NULL,(TickType_t)period,(TickType_t)13);
+      xPeriodicTaskCreate(lightRGB,taskName,65,NULL,NULL,(TickType_t)period,(TickType_t)8);
   }
 }
 
@@ -224,7 +224,7 @@ void lightRed(void* pvParameters){
   digitalWrite(BLUE_LED,LOW);
   digitalWrite(GREEN_LED,LOW);
   digitalWrite(YELL_LED,LOW);
-  //delay(5);
+  delay(5);
   vTaskDelete(0);
 }
 
@@ -233,7 +233,7 @@ void lightBlue(void* pvParameters){
   digitalWrite(BLUE_LED,HIGH);
   digitalWrite(GREEN_LED,LOW);
   digitalWrite(YELL_LED,LOW);
-  //delay(5);
+  delay(5);
   vTaskDelete(0);
 }
 
@@ -242,7 +242,7 @@ void lightGreen(void* pvParameters){
   digitalWrite(BLUE_LED,LOW);
   digitalWrite(GREEN_LED,HIGH);
   digitalWrite(YELL_LED,LOW);
-  //delay(5);
+  delay(5);
   vTaskDelete(0);
 }
 
@@ -251,7 +251,7 @@ void lightYellow(void* pvParameters){
   digitalWrite(BLUE_LED,LOW);
   digitalWrite(GREEN_LED,LOW);
   digitalWrite(YELL_LED,HIGH);
-  //delay(5);
+  delay(5);
   vTaskDelete(0);
 }
 

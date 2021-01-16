@@ -17,17 +17,17 @@ void setup()
   
   xAperiodicTaskCreate(MyTask1APer, "Task3", 65, NULL, NULL,(TickType_t)0);
   xAperiodicTaskCreate(MyTask2APer, "Task4", 65, NULL, NULL,(TickType_t)21);
-  //xAperiodicTaskCreate(MyTask3APer, "Task5", 65, NULL, NULL,(TickType_t)27);
+  xAperiodicTaskCreate(MyTask3APer, "Task5", 65, NULL, NULL,(TickType_t)37);
   //xAperiodicTaskCreate(MyTask1APer, "Task31", 65, NULL, NULL,(TickType_t)200);
   /*xAperiodicTaskCreate(MyTask2APer, "Task41", 75, NULL, NULL,(TickType_t)22);
   xAperiodicTaskCreate(MyTask3APer, "Task51", 75, NULL, NULL,(TickType_t)0);
   xAperiodicTaskCreate(MyTask1APer, "Task32", 75, NULL, NULL,(TickType_t)20);*/
  
   //xTaskCreate(MyIdleTask, "IdleTask", 100, NULL, 0, NULL);
-  xPeriodicTaskCreate(MyTask1Per,"Per1",65,NULL,NULL,(TickType_t)18,(TickType_t)3);
-  xPeriodicTaskCreate(MyTask2Per,"Per2",65,NULL,NULL,(TickType_t)12,(TickType_t)3);
-  /*xPeriodicTaskCreate(MyTask3Per,"Per3",75,NULL,NULL,(TickType_t)26,(TickType_t)3);
-  xPeriodicTaskCreate(MyTask1Per,"Per4",75,NULL,NULL,(TickType_t)39,(TickType_t)3);
+  xPeriodicTaskCreate(MyTask1Per,"Per1",65,NULL,NULL,(TickType_t)28,(TickType_t)3);
+  xPeriodicTaskCreate(MyTask2Per,"Per2",65,NULL,NULL,(TickType_t)32,(TickType_t)3);
+  xPeriodicTaskCreate(MyTask3Per,"Per3",75,NULL,NULL,(TickType_t)46,(TickType_t)3);
+  /*xPeriodicTaskCreate(MyTask1Per,"Per4",75,NULL,NULL,(TickType_t)39,(TickType_t)3);
   xPeriodicTaskCreate(MyTask2Per,"Per5",75,NULL,NULL,(TickType_t)32,(TickType_t)3);
   /*xPeriodicTaskCreate(MyTask3Per,"Per3",75,NULL,NULL,(TickType_t)27,(TickType_t)3);
   xPeriodicTaskCreate(MyTask1Per,"Per1",75,NULL,NULL,(TickType_t)49,(TickType_t)3);
@@ -51,7 +51,11 @@ void loop()
   Serial.print(xGetNextTimetoFill());
   Serial.println(F("   "));*/
   //cnt = (cnt+1);
-  
+  if(timer == 1){
+    timer = 0;
+    startSchedluer();
+    //vTaskStartScheduler();
+  }
   if(cnt == 0 && xTaskGetTickCount() > 300)
   {
     vPeriodicTaskDelete("Per1");

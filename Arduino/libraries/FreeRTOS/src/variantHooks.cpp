@@ -72,12 +72,7 @@ void startSchedluer( void ) __attribute__((weak));
 
 void startSchedluer( void )
 {	
-	/*if(bCheckSchedulability() == 0){
-		vRestartAllPeriodicTasks();
-		sendMessage(1);
-		return;
-	}*/
-	sendMessage(10);
+	//sendMessage(10);
 	isStarted = 1;
 	vTaskStartScheduler();
 }
@@ -293,9 +288,9 @@ void sendTasksMarker(int task,int marker)
 	taskMarker(task,marker);
 }
 
-void sendMessage(int flag) __attribute__((weak));
+void uSendMessage(int flag) __attribute__((weak));
 
-void sendMessage(int flag)
+void uSendMessage(int flag)
 {
-	sendMessage(flag);
+	custMsg(flag);
 }

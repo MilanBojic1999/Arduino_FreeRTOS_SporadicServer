@@ -1171,7 +1171,7 @@ static int iIndexOfPeriodicTask(TCB_t* uxTCB)
 		}
 	}
 	
-	return -2; // minus dve jer se rezultat povećava za jedan, a nula je rezervisana za server
+	return uxNumberOfPeriodicTasks; // minus dve jer se rezultat povećava za jedan, a nula je rezervisana za server
 }
 
 BaseType_t xPeriodicTaskCreate(TaskFunction_t pxTaskCode,
@@ -2757,14 +2757,6 @@ void vTaskStartScheduler( void )
 {
     BaseType_t xReturn;
 	
-	
-	/*if( bCheckSchedulability() == 0 ){
-		extern void sendMessage(int flag);
-		
-		sendMessage(1);
-		
-		return;
-	}*/
 		
     /* Add the idle task at the lowest priority. */
     #if ( configSUPPORT_STATIC_ALLOCATION == 1 )

@@ -80,7 +80,7 @@ void sendSystemInfo(int runningTask,int serverCapacity,int currTick);
 
 void sendTasksMarker(int task,int marker);
 
-void sendMessage(int flag);
+void uSendMessage(int flag);
 
 #ifdef __cplusplus
 }

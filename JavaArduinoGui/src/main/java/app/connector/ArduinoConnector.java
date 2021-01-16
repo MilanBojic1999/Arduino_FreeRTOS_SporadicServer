@@ -52,7 +52,7 @@ public class ArduinoConnector implements Runnable{
             //app.newFill(0);
             //System.out.println("NE message");
             try {
-                Thread.sleep(10);
+                Thread.sleep(20);
             } catch (InterruptedException e) {
                 //e.printStackTrace();
             }
@@ -64,73 +64,70 @@ public class ArduinoConnector implements Runnable{
                 e.printStackTrace();
                 continue;
             }
-            if(msg.equals(""))
+            if (msg.equals(""))
                 continue;
             //System.out.println("This: "+msg);
+            try {
+                if (msg.startsWith("SYS")) {
 
-            if(msg.startsWith("SYS")){
+                    String[] arr = msg.split(" ");
+                    int runTask = getInteger(arr[1]);
+                    int servCap = getInteger(arr[2]);
+                    int currTick = getInteger(arr[3]);
 
-                String[] arr = msg.split(" ");
-                int runTask = getInteger(arr[1]);
-                int servCap = getInteger(arr[2]);
-                int currTick = getInteger(arr[3]);
+                    app.getControler().addToList(runTask);
+                    app.getControler().setCapacity(servCap);
+                    app.setCurrTick(currTick);
 
-                app.getControler().addToList(runTask);
-                app.getControler().setCapacity(servCap);
-                app.setCurrTick(currTick);
+                } else if (msg.startsWith("TMA")) {
 
-            }else if(msg.startsWith("TMA")){
+                    String[] arr = msg.split(" ");
 
-                String[] arr = msg.split(" ");
+                    int task = getInteger(arr[1]);
+                    int flag = getInteger(arr[2]);
 
-                int task = getInteger(arr[1]);
-                int flag = getInteger(arr[2]);
+                    if (flag == 1) {
+                        app.getControler().addToArrival(task);
+                    } else {
+                        System.err.println("IDK what this mead: " + flag);
+                    }
 
-                if(flag == 1){
-                    app.getControler().addToArrival(task);
-                }else{
-                    System.err.println("IDK what this mead: "+flag);
+                } else if (msg.startsWith("MSG")) {
+                    String[] arr = msg.split(" ");
+                    int ind = getInteger(arr[1]);
+                    if (ind == 1) {
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                app.getControler().openWarningWindow("This batch isn't schedulable");
+                            }
+                        });
+
+                    } else {
+                        System.err.println("IDK what this mead: " + ind);
+                    }
+
+                } else if (msg.startsWith("MSC")) {
+                    System.out.println(msg);
+                    String[] arr = msg.split(" ");
+                    int max = getInteger(arr[1]);
+                    System.out.println("MSC: " + max);
+                    app.getControler().setMaxCap(max);
+                } else {
+                    System.err.println(msg);
                 }
-
-            }else if(msg.startsWith("MSG")){
-                String[] arr = msg.split(" ");
-                int ind = getInteger(arr[1]);
-                if(ind == 1){
-                    Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            app.getControler().openWarningWindow("This batch isn't schedulable");
-                        }
-                    });
-
-                }else{
-                    System.err.println("IDK what this mead: "+ind);
-                }
-
-            }else if(msg.startsWith("MSC")){
-                System.out.println(msg);
-                String[] arr = msg.split(" ");
-                int max = getInteger(arr[1]);
-                System.out.println("MSC: "+max);
-                app.getControler().setMaxCap(max);
-            }else{
-                System.err.println(msg);
+            }catch (ArrayIndexOutOfBoundsException e){
+                System.err.println("Bad connectuibn while reciving: "+msg);
             }
-
         }
     }
 
     int getInteger(String str){
         byte[] arr = str.getBytes();
-
+        //System.out.println(Arrays.toString(arr));
         if(arr.length==1)
             return (arr[0] & 0xff);
         return ((arr[0] & 0xff)) << 8 | (arr[1] & 0xff) ;
     }
 
-    double getDouble(String str){
-        byte[] arr = str.getBytes();
-
-        return ByteBuffer.wrap(arr).getDouble();
-    }
 }

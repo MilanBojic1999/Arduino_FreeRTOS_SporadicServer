@@ -259,6 +259,8 @@ public class mWindowControler {
                 gc2.fillRect((i+1)*20,30,20,20);
             }else if(val==3){
                 gc3.fillRect((i+1)*20,30,20,20);
+            }else{
+                //System.err.println("Wrong val: "+val);
             }
         }
     }
